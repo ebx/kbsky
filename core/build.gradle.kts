@@ -2,6 +2,26 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     id("module.publications")
+    id("maven-publish")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = "work.socialhub.kbsky"
+            artifactId = "core-jvm"
+            version = "0.3.0-EBX-SNAPSHOT"
+        }
+    }
+    repositories {
+        maven {
+            url = uri("[repo-url]")
+            credentials {
+                username = "aws"
+                password = "[token]"
+            }
+        }
+    }
 }
 
 kotlin {
