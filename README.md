@@ -63,6 +63,23 @@ Here is a sample Maven configuration:
 </dependency>
 ```
 
+### Local deployment (for local testing)
+1. Modify the version in `build.gradle.kts` in both root and any other modified project (mainly
+   core and auth).
+2. Build the project from the root - `jvmjar` - this will build the JAR files
+3. Publish to your local Maven cache -  `publishJvmPubliscationToMavenLocal`. Once this has run, 
+   ensure your local Maven cache has the correct dependencies.
+
+### EBX deployment
+1. Modify the version in `build.gradle.kts` in both root and any other modified project (mainly 
+   core and auth).
+2. Update the `build.gradle.kts` in the maven publishing section to include both the code artifact 
+   URL `url = uri(CODE_ARTIFACT_URL)`
+3. Generate the code artifact token via the AWS console (repositories -> ebx-core -> View 
+   Connection Instructions -> Step 1: package management client => Gradle, Step 2: Push to your 
+   repository -> run the cmd line to generate `CODEARTIFACT_AUTH_TOKEN` in your local shell).
+4. Add the generated code artifact token as the `password`.
+
 ### Starting a Session
 
 #### Authentication with Password

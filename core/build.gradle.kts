@@ -10,11 +10,12 @@ publishing {
         create<MavenPublication>("mavenJava") {
             groupId = "work.socialhub.kbsky"
             artifactId = "core-jvm"
-            version = "0.3.0-EBX-SNAPSHOT"
+            version = "0.3.1-EBX-SNAPSHOT"
         }
     }
     repositories {
         maven {
+            //use publishJvmPublicationToMaven2Repository
             url = uri("[repo-url]")
             credentials {
                 username = "aws"
