@@ -13,7 +13,7 @@ plugins {
 
 allprojects {
     group = "work.socialhub.kbsky"
-    version = "0.3.1-EBX-SNAPSHOT"
+    version = "0.3.2-EBX-SNAPSHOT"
 
     repositories {
         mavenCentral()

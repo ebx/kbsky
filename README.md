@@ -66,9 +66,9 @@ Here is a sample Maven configuration:
 ### Local deployment (for local testing)
 1. Modify the version in `build.gradle.kts` in both root and any other modified project (mainly
    core and auth).
-2. Build the project from the root - `jvmjar` - this will build the JAR files
-3. Publish to your local Maven cache -  `publishJvmPubliscationToMavenLocal`. Once this has run, 
-   ensure your local Maven cache has the correct dependencies.
+2. Build the project from the root - Build > `jvmjar` - this will build the JAR files
+3. Publish to your local Maven cache - Publish > `publishJvmPubliscationToMavenLocal`. Once this 
+   has run, ensure your local Maven cache has the correct dependencies.
 
 ### EBX deployment
 1. Modify the version in `build.gradle.kts` in both root and any other modified project (mainly 
@@ -79,6 +79,9 @@ Here is a sample Maven configuration:
    Connection Instructions -> Step 1: package management client => Gradle, Step 2: Push to your 
    repository -> run the cmd line to generate `CODEARTIFACT_AUTH_TOKEN` in your local shell).
 4. Add the generated code artifact token as the `password`.
+5. Build the project from the root - Build > `jvmjar` - this will build the JAR files.
+6. To publish to Code Artifact - Publish > `publishJvmPublicationToMaven2Repository`.
+6. After publishing, ensure all files are present (see previous successful versions).
 
 ### Starting a Session
 
