@@ -75,4 +75,13 @@ interface RepoResource {
     fun uploadBlob(
         request: RepoUploadBlobRequest
     ): Response<RepoUploadBlobResponse>
+
+    /**
+     * Upload a new blob using raw bytes with an explicit content type.
+     * Use in place of [uploadBlob] for content types not natively
+     * supported by the underlying HTTP client (e.g. image/webp).
+     */
+    fun uploadBlobWithBytes(
+        request: RepoUploadBlobRequest
+    ): Response<RepoUploadBlobResponse>
 }
