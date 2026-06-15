@@ -194,26 +194,30 @@ object _InternalUtility {
             this.followRedirects = req.followRedirect
         }
 
-        return HttpResponse.from(
-            client.request {
-                this.method = Post
-                this.url.takeFrom(URLBuilder(checkNotNull(req.url)))
-                this.headers {
-                    req.header.forEach { (k, v) ->
-                        // Skip Content-Type from headers; it will be set by ByteArrayContent
-                        if (!k.equals("Content-Type", ignoreCase = true)) {
-                            append(k, v)
+        return try {
+            HttpResponse.from(
+                client.request {
+                    this.method = Post
+                    this.url.takeFrom(URLBuilder(checkNotNull(req.url)))
+                    this.headers {
+                        req.header.forEach { (k, v) ->
+                            // Skip Content-Type from headers; it will be set by ByteArrayContent
+                            if (!k.equals("Content-Type", ignoreCase = true)) {
+                                append(k, v)
+                            }
                         }
                     }
-                }
-                setBody(
-                    ByteArrayContent(
-                        bytes = bytes,
-                        contentType = ContentType.parse(mimeType)
+                    setBody(
+                        ByteArrayContent(
+                            bytes = bytes,
+                            contentType = ContentType.parse(mimeType)
+                        )
                     )
-                )
-            }
-        )
+                }
+            )
+        } finally {
+            client.close()
+        }
     }
 
     private fun HttpRequest.addContentLabelersHeader(acceptLabelers: List<String>) {
