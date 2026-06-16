@@ -1,7 +1,15 @@
 package work.socialhub.kbsky.internal.share
 
+import io.ktor.client.HttpClient
+import io.ktor.client.request.headers
+import io.ktor.client.request.request
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpMethod.Companion.Post
+import io.ktor.http.URLBuilder
+import io.ktor.http.content.ByteArrayContent
+import io.ktor.http.takeFrom
 import kotlinx.datetime.TimeZone
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -152,6 +160,64 @@ object _InternalUtility {
         val second = this.post()
         auth.afterRequestHook(method, this, second)
         return second
+    }
+
+    suspend fun HttpRequest.postBytesWithAuth(
+        auth: AuthProvider,
+        bytes: ByteArray,
+        mimeType: String
+    ): HttpResponse {
+        addContentLabelersHeader(auth.acceptLabelers)
+
+        // Populate standard headers into the header map (mirrors khttpclient's proceed())
+        accept?.let { header["Accept"] = it }
+        userAgent?.let { header["User-Agent"] = it }
+
+        val method = Post.value
+        auth.beforeRequestHook(method, this)
+        val first = sendRawBytes(bytes, mimeType)
+        if (!auth.afterRequestHook(method, this, first))
+            return first
+
+        auth.beforeRequestHook(method, this)
+        val second = sendRawBytes(bytes, mimeType)
+        auth.afterRequestHook(method, this, second)
+        return second
+    }
+
+    private suspend fun HttpRequest.sendRawBytes(
+        bytes: ByteArray,
+        mimeType: String
+    ): HttpResponse {
+        val req = this
+        val client = HttpClient {
+            this.followRedirects = req.followRedirect
+        }
+
+        return try {
+            HttpResponse.from(
+                client.request {
+                    this.method = Post
+                    this.url.takeFrom(URLBuilder(checkNotNull(req.url)))
+                    this.headers {
+                        req.header.forEach { (k, v) ->
+                            // Skip Content-Type from headers; it will be set by ByteArrayContent
+                            if (!k.equals("Content-Type", ignoreCase = true)) {
+                                append(k, v)
+                            }
+                        }
+                    }
+                    setBody(
+                        ByteArrayContent(
+                            bytes = bytes,
+                            contentType = ContentType.parse(mimeType)
+                        )
+                    )
+                }
+            )
+        } finally {
+            client.close()
+        }
     }
 
     private fun HttpRequest.addContentLabelersHeader(acceptLabelers: List<String>) {

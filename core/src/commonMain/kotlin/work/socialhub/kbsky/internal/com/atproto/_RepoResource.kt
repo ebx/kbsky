@@ -24,6 +24,7 @@ import work.socialhub.kbsky.api.entity.com.atproto.repo.RepoPutRecordResponse
 import work.socialhub.kbsky.api.entity.com.atproto.repo.RepoUploadBlobRequest
 import work.socialhub.kbsky.api.entity.com.atproto.repo.RepoUploadBlobResponse
 import work.socialhub.kbsky.api.entity.share.Response
+import work.socialhub.kbsky.internal.share._InternalUtility.postBytesWithAuth
 import work.socialhub.kbsky.internal.share._InternalUtility.postWithAuth
 import work.socialhub.kbsky.internal.share._InternalUtility.proceed
 import work.socialhub.kbsky.internal.share._InternalUtility.proceedUnit
@@ -146,6 +147,24 @@ class _RepoResource(
                         fileBody = request.bytes
                     )
                     .postWithAuth(request.auth)
+            }
+        }
+    }
+
+    override fun uploadBlobWithBytes(
+        request: RepoUploadBlobRequest
+    ): Response<RepoUploadBlobResponse> {
+
+        return proceed {
+            runBlocking {
+                HttpRequest()
+                    .url(xrpc(config, RepoUploadBlob))
+                    .accept(MediaType.JSON)
+                    .postBytesWithAuth(
+                        auth = request.auth,
+                        bytes = request.bytes,
+                        mimeType = request.contentType
+                    )
             }
         }
     }
