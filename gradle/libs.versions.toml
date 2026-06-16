@@ -4,6 +4,8 @@ kotest = "5.9.1"
 dokka = "2.0.0"
 maven-publish = "0.30.0"
 
+cryptography = "0.4.0"
+
 [libraries]
 khttpclient = "work.socialhub:khttpclient:0.0.3"
 ktor-core = "io.ktor:ktor-client-core:3.0.3"
@@ -16,10 +18,10 @@ kotest-assertions = { module = "io.kotest:kotest-assertions-core-jvm", version.r
 nexus-publish = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin:2.0.0"
 maven-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "maven-publish" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
-cryptography-bom = "dev.whyoleg.cryptography:cryptography-bom:0.4.0"
-cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core" }
-cryptography-openssl = { module = "dev.whyoleg.cryptography:cryptography-provider-openssl3-prebuilt" }
-cryptography-jdk = { module = "dev.whyoleg.cryptography:cryptography-provider-jdk" }
+cryptography-bom = { module = "dev.whyoleg.cryptography:cryptography-bom", version.ref = "cryptography" }
+cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptography" }
+cryptography-openssl = { module = "dev.whyoleg.cryptography:cryptography-provider-openssl3-prebuilt", version.ref = "cryptography" }
+cryptography-jdk = { module = "dev.whyoleg.cryptography:cryptography-provider-jdk", version.ref = "cryptography" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
